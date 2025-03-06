@@ -1,0 +1,6 @@
+{
+	"gameboard_filter" : "gbf_ref",
+	"filtered_game_map" : "fgm_ref",
+	"orgs" : "orgslist_ref",
+	"playerops_vector" : "pov_ref"
+}

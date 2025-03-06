@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+	<flow name="readMeFirst"
+		doc:id="2778df26-9095-4871-a1a7-26c9e77229f3"
+		doc:description="Next:
+
+1) generate some mock data for testing program operations
+2) read data in to form project models
+3) explore alternative for persisting info in Object Store
+4) Factor out the use of database - replace with S3 storage ops
+5) Parameterize storage details and isolate to (internal) system layer
+">
+		<logger level="INFO" doc:name="main.h"
+			doc:id="3d428bb1-efbb-478d-879d-be5a226f5023"
+			message="nothing special here, except project notes"
+			doc:description="See project notes inside this flow" />
+	</flow>
+
+
+
+
+</mule>

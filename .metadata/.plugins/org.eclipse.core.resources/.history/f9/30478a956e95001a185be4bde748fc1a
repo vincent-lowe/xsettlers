@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<flow name="testPost" doc:id="d121269d-ee7b-426f-a4a4-f219c1641486" >
+		<http:listener doc:name="GET /posttest" doc:id="26c80a90-d210-42df-92d0-9f1eeb077e31" config-ref="HTTP_Listener_config" path="/posttest" allowedMethods="GET" doc:description="This flow simply creates a record and submits it as an object to the POST implementation"/>
+		<set-payload value='#[{
+	"objecttypename" : "ship",
+	"objectproperties" :
+		{ "line" : "Nimitz", "year" : "1999" },
+	"objectdata" : "dataencodedinline"
+}]' doc:name="Set Payload" doc:id="59e74388-1a4d-4553-83af-5ae2331e90d2" />
+		<flow-ref doc:name="postObject" doc:id="6401a891-29a5-4249-8719-a549222a8a1c" name="postObject" target="newObjectKey"/>
+		<set-payload doc:name="Set Payload" doc:id="bd3f0b74-abbb-4f77-bb2d-291e5ffa3d2c" mimeType="application/json" value='#[output application/json --- { "newly-added-key" : (vars.newObjectKey default "unassignedKey")}]'/>
+		<logger level="INFO" doc:name="Logger" doc:id="27518863-8bcb-470e-af32-27a66d0dcc6d" message='#["Posted object: " ++ (vars.newObjectKey default "unassignedKey")]'/>
+	</flow>
+	<flow name="reportKeys" doc:id="9aca6374-7617-494c-83cf-7ded90ea4e4a" >
+		<http:listener doc:name="Get /okeys" doc:id="a5c79d80-3708-4684-b9e0-4894ba15d7ff" config-ref="HTTP_Listener_config" path="/okeys" allowedMethods="GET"/>
+		<os:retrieve-all-keys doc:name="Retrieve all keys" doc:id="259eabcb-97db-4a46-9e2e-f47ce2a6eb65" />
+		<logger level="INFO" doc:name="Logger" doc:id="aabf7e3e-7e5e-4174-863c-f70a9fe44c12" message="#[payload]"/>
+	</flow>
+	<sub-flow name="postObject" doc:id="d0e32f87-7095-48b9-a8a3-1436ef5e8e46" >
+		<set-variable value="#[0]" doc:name="recursionLatch" doc:id="372009ae-6284-4a26-8aa1-49f781561b6e" variableName="recursionLatch"/>
+		<set-variable value='#[(payload.objecttypename default "generic") ++ (now() as String {format: "-yyMMddhhmm-"}) ++ randomInt(10000)]' doc:name="candidateKey" doc:id="e30c18d7-41be-4298-bf41-d86c2248adaa" variableName="candidateKey" />
+		<os:contains doc:name="already in Object store?" doc:id="402eb9aa-675d-45b7-9c65-4ee14c52bff3" key="#[vars.candidateKey]" target="keyAvailable"/>
+		<choice doc:name="Choice" doc:id="f739355b-8ebf-4413-bee1-eb940bf64d4a" >
+			<when expression="#[vars.keyAvailable]">
+				<os:store doc:name="Store" doc:id="07cf11b8-ab7c-443d-8cd3-951dd0c80769" key="#[vars.candidateKey]" doc:description="Stalled here ... the needed value is localized to the Until Successful block" />
+			</when>
+			<otherwise >
+				<set-variable value="#[vars.recursionLatch + 1]" doc:name="increment recursionLatch" doc:id="7a182b03-0587-4423-8a20-a4732e0dfe6e" variableName="recursionLatch"/>
+				<validation:is-true doc:name="not at max recursion depth" doc:id="683b0dfc-083b-459a-afb5-9f228cb4b6cf" message="#[vars.recursionLatch &lt; 5]"/>
+				<flow-ref doc:name="createValidKey (again)" doc:id="e68e55f2-c52e-4ca4-ab1c-1d2241609a63" name="postObject"/>
+			</otherwise>
+		</choice>
+	</sub-flow>
+	<flow name="keyStatus" doc:id="78ba79f9-1777-4bac-8c04-19875d86e8b6" >
+		<validation:matches-regex doc:id="9b26b83a-1a28-470c-a8c7-a913e3e3022b" value="#[payload]" regex="#[/^[A-Za-z0-9:\-\.]*$/]" message="bad input!" doc:name="Safe Key Content" />
+	</flow>
+</mule>

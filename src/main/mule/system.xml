@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:s3="http://www.mulesoft.org/schema/mule/s3"
+	xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/s3 http://www.mulesoft.org/schema/mule/s3/current/mule-s3.xsd">
+
+	<flow name="softStore-list"
+		doc:id="5710dae2-6063-48fa-b600-88558a8a74c7">
+
+		<os:retrieve-all-keys
+			doc:name="Retrieve all keys"
+			doc:id="b846a8fc-62b4-4740-8b98-9f98ceeee541" />
+	</flow>
+	<flow name="softStore-get"
+		doc:id="94fe2699-bfd4-47df-bb0b-8b9a24248301">
+		<os:retrieve doc:name="validKey"
+			doc:id="05d3147d-4fb6-482c-a084-7c32b76c47cc" key="unfinished"
+			doc:description="unfinished">
+			<os:default-value><![CDATA[0]]></os:default-value>
+		</os:retrieve>
+	</flow>
+	<flow name="publishToSoftStore"
+		doc:id="86ae9ab9-5234-4873-80e7-6934c309901a">
+		<set-variable
+			value='#[vars.oKey default ("object-" ++ (vars.objecttype default "generic") ++ now() as String {format: "-yyyyMMddhhmmss"})]'
+			doc:name="validateKey" doc:id="ece8208d-0ec1-4fe6-939d-8ce64cb6ab21"
+			variableName="validKey" />
+		<os:store doc:name="validKey: payload"
+			doc:id="93642e02-60b6-4980-82c6-a73f19f83ebc" key="vars.validKey" />
+	</flow>
+	<flow name="publishToVault"
+		doc:id="9deb29f7-52e3-465c-a888-304c038c7aef">
+		<set-variable
+			value='#[vars.oKey default ("object-" ++ (vars.objecttype default "generic") ++ now() as String {format: "-yyyyMMddhhmmss"})]'
+			doc:name="validateKey" doc:id="ac36c733-8ff4-4b43-9e5c-47ae1e41b6ca"
+			variableName="validKey" />
+		<s3:create-object doc:name="panreality-object-vault - validKey : payload"
+			doc:id="5feeacd0-02d1-4d58-ba62-39d661b076e7"
+			bucketName="panreality-object-vault" key='#[vars.validKey]' config-ref="S3_Vault_Configuration"/>
+	</flow>
+
+
+</mule>

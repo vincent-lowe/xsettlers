@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<flow name="sandboxFlow" doc:id="5a05bf74-becb-4f1e-a4c9-2b86c4747b5e" >
+		<validation:matches-regex doc:name="Matches regex" doc:id="5d1b05f5-567a-4a18-8d16-df765b734868" value="object-200519-12:01:35:068-TZ-9" regex="#[/^[^\\\!\`\'\&quot;]*$/]"/>
+	</flow>
+</mule>
