@@ -1,5 +1,0 @@
-{
-	"gbid" : "initialize",
-	"players" : [ "p1", "p2", "p3" ],
-	"map" : [ "sector_ref" ]
-}

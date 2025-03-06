@@ -1,6 +1,0 @@
-http:
-  port: "8081"
-  
-aws:
-  s3_key: "AKIAIUKKOGXTZUVAKJJA"
-  s3_secret: "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"

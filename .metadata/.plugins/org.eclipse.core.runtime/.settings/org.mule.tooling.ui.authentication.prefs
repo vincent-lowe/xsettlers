@@ -1,6 +1,0 @@
-authenticated.users=[{"id"\:"c84e25e5-41d0-4529-9d6a-140b3186fe10","token"\:"991f601e-7686-451c-90e1-007f5895728b","userId"\:"VincentLoweTrains","email"\:"vincent.lowe@mulesoft.com","refreshToken"\:"","baseUrl"\:"https\://anypoint.mulesoft.com/","org"\:{"name"\:"Mulesoft Training","id"\:"c65a645b-383f-43a0-bb7b-b3d889a299cf","isMaster"\:true}}]
-current.token=991f601e-7686-451c-90e1-007f5895728b
-current.user=VincentLoweTrains
-eclipse.preferences.version=1
-expiration.time=7
-org.mule.tooling.ui.properties.enable.api.dependencies=true

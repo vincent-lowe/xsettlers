@@ -1,6 +1,0 @@
-{
-	"objecttypename" : "ship",
-	"objectproperties" :
-		{ "line" : "Nimitz", "year" : "1999" },
-	"objectdata" : "dataencodedinline"
-}
